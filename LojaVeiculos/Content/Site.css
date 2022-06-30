@@ -1,0 +1,12 @@
+﻿
+label{
+    margin: 5px 0px 0px 0px;
+    font-size: small;
+}
+
+.inputBlack {
+    background-color: #333 !important;
+    color: #fff !important;
+    font-weight: bold !important;
+    text-align: center;
+}

@@ -1,0 +1,142 @@
+﻿@model IEnumerable<LojaVeiculos.Models.VeiculoOcorrencia>
+
+@{
+    Layout = null;
+
+    var veiculoId = ViewBag.VeiculoId;
+}
+
+<script>
+
+    $("#response-alert-ocorrencia").hide();
+
+</script>
+
+<div class="row">
+
+    <div class="col-sm-12">
+        <div id="response-alert-ocorrencia">            
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-4">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <input type="hidden" name="VeiculoId" id="VeiculoId" value="@veiculoId" />
+                <textarea class="form-control" name="Descricao" id="Descricao"></textarea>
+            </div>
+
+            <div class="col-sm-12 pt-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnSalvarOcorrencia">Inserir ocorrência</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-sm-8">
+
+        <div class="card">
+
+            <div class="card-body small">
+
+                @if (Model.Count() > 0)
+                {
+                    <table class="table table-responsive-sm small">
+
+                        <tr>
+                            <th>Id</th>
+                            <th>Usuário</th>
+                            <th>Data</th>
+                            <th>Ocorrência</th>
+                        </tr>
+
+                        @foreach (var ocorrencia in Model.OrderByDescending(x => x.DataOcorrencia))
+                        {
+                            <tr>
+                                <td>@ocorrencia.OcorrenciaId.ToString("000000")</td>
+                                <td>@ocorrencia.Usuario.Nome</td>
+                                <td>@ocorrencia.DataOcorrencia</td>
+                                <td>@ocorrencia.Descricao</td>
+                            </tr>
+                        }
+
+                    </table>
+                }
+                else
+                {
+                    <div class="text-center small">
+                        <span>Esse veículo não possui nenhuma ocorrência registrada</span>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+</div>
+
+<script>
+
+    $("#btnSalvarOcorrencia").click(function () {
+
+        if ($("#Descricao").val() == "") {
+            callAlertDanger("#response-alert-ocorrencia", "Preencha a descrição da ocorrência", function () {
+                $("#response-alert-ocorrencia").hide("normal");
+                $("#Descricao").focus();
+            });
+            return false;
+        }
+
+        salvarOcorrencia($("#VeiculoId").val(), $("#Descricao").val());
+    });
+
+    var salvarOcorrencia = function (veiculoId, descricao) {
+
+        var json = {
+            VeiculoId: veiculoId,
+            Descricao: descricao
+        };
+
+        console.log(json);
+
+        $.ajax({
+            url: "/Veiculo/SalvarOcorrencia",
+            method: "post",
+            data: json,
+            beforeSend: function () {
+                $("#btnSalvarOcorrencia").attr("disabled", "disabled");
+            },
+            success: function (data) {
+                if (data.Sucesso) {
+                    callAlertSuccess("#response-alert-ocorrencia", data.Mensagem, function () {
+                        carregarOcorrenciasVeiculo(data.Id)
+                    });
+                } else {
+                    callAlertDanger("#response-alert-ocorrencia", data.Mensagem, function () {
+                        $("#response-alert-ocorrencia").hide("normal");
+                        $("#btnSalvarOcorrencia").removeAttr("disabled", "disabled");
+                    });
+                }
+            },
+            error: function () {
+                callAlertDanger("#response-alert-ocorrencia", "Houve um erro ao processar a rotina!", function () {
+                    $("#response-alert-ocorrencia").hide("normal");
+                    $("#btnSalvarOcorrencia").removeAttr("disabled", "disabled");
+                });
+            }
+        })
+
+    }
+
+</script>
+

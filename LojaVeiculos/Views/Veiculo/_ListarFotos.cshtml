@@ -1,0 +1,71 @@
+﻿@model IEnumerable<LojaVeiculos.Models.VeiculoFoto>
+
+
+@{
+    Layout = null;
+
+    var veiculoId = ViewBag.VeiculoId;
+    var tipo = ViewBag.Tipo;
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        //Recebe o tipo de foto pela ViewBag
+        var veiculoId = parseInt('@veiculoId');
+        var tipo = '@tipo';
+
+        //Remove todas as classes dos botões, e insere a classe selecionado no botão do tipo selecionado
+        $(".btn_tipo").removeClass("btn-secondary").addClass("btn-outline-secondary");
+        $("#tipo_" + tipo.toUpperCase()).removeClass("btn-outline-secondary").addClass("btn-secondary");
+
+    })
+
+</script>
+
+<div class="card">
+
+    <div class="card-body small">  
+
+        <div class="row">
+
+            @foreach(var foto in Model)
+            {
+                var arquivo = foto.Tipo + foto.VeiculoId.ToString("000000") + "_" + foto.NumeroFoto.ToString("00") + foto.Extensao;
+
+                <div class="col-sm-3">
+                    <div class="card mb-3">
+                        <img style="width: 100%;" src="~/Content/Imagens/@foto.VeiculoId/@arquivo" onclick="openImageModal($(this).attr('src'))" />
+                        <span class="p-1 text-center">@foto.Tipo ( @foto.NumeroFoto.ToString("00") )</span>
+                        <input type="hidden" id="hidFotoId" value="@foto.FotoId" />
+                        <button class="btn btn-outline-danger btn-sm small" onclick="excluirFoto($('#hidFotoId').val(),'@foto.Tipo')">Excluir</button>
+                    </div>                    
+                </div>
+                        
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    var excluirFoto = function (fotoId,tipo) {
+
+        $.ajax({
+            url: "/Veiculo/ExcluirFoto",
+            method: "post",
+            data: { FotoId: fotoId },
+            success: function (data) {
+                callAlertSuccess("#response-alert-foto", data.Mensagem, function () {
+                    $("#response-alert-foto").hide("normal");
+                    mostrarFotosVeiculo(data.Id, tipo);
+                });
+            }
+        })
+    }
+
+</script>

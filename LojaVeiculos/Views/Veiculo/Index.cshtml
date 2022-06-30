@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+
+    var veiculoId = Request.QueryString["Id"];
+}
+
+
+<script>
+
+    $(document).ready(function () {
+
+        carregarDadosVeiculo(@veiculoId);
+
+    });
+
+
+    var carregarDadosVeiculo = function (veiculoId) {
+        $.ajax({
+            url: "/Veiculo/RetornarDados",
+            method: "get",
+            data: { Id: veiculoId },
+            beforeSend: function () {
+                $("#nav-dados").html(loading("primary"));
+            },
+            success: function (data) {
+                $("#nav-dados").html(data);
+            }
+        })
+    }
+
+    var carregarLogsVeiculo = function (veiculoId) {
+        $.ajax({
+            url: "/Veiculo/RetornarLogs",
+            method: "get",
+            data: { Id: veiculoId },
+            beforeSend: function () {
+                $("#nav-logs").html(loading("primary"));
+            },
+            success: function (data) {
+                $("#nav-logs").html(data);
+            }
+        })
+    }
+
+    var carregarOcorrenciasVeiculo = function (veiculoId) {
+        $.ajax({
+            url: "/Veiculo/RetornarOcorrencias",
+            method: "get",
+            data: { Id: veiculoId },
+            beforeSend: function () {
+                $("#nav-ocorrencias").html(loading("primary"));
+            },
+            success: function (data) {
+                $("#nav-ocorrencias").html(data);
+            }
+        })
+    }
+
+    var carregarFotosVeiculo = function (veiculoId) {
+        $.ajax({
+            url: "/Veiculo/RetornarFotos",
+            method: "get",
+            data: { Id: veiculoId },
+            beforeSend: function () {
+                $("#nav-fotos").html(loading("primary"));
+            },
+            success: function (data) {
+                $("#nav-fotos").html(data);
+            }
+        })
+    }
+
+    var mostrarFotosVeiculo = function (veiculoId, tipo) {
+        $.ajax({
+            url: "/Veiculo/ListarFotos",
+            method: "get",
+            data: { Id: veiculoId, Tipo: tipo },
+            success: function (data) {
+                $("#mostraFotos").html(data);
+            }
+        })
+    }
+
+    var openImageModal = function (img) {
+        $("#divModalImage").attr("src", img);
+        $("#exampleModalCenter").modal("show");
+    };
+
+    var closeImageModal = function (img) {
+        $("#exampleModalCenter").modal("hide");
+    }
+
+
+</script>
+
+<nav>
+    <div class="nav nav-tabs small " id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-dados-tab" data-bs-toggle="tab" data-bs-target="#nav-dados" type="button" role="tab" aria-controls="nav-dados" aria-selected="true" onclick="carregarDadosVeiculo(@veiculoId);"><i class="fa-solid fa-car"></i> Dados</button>
+        <button class="nav-link" id="nav-logs-tab" data-bs-toggle="tab" data-bs-target="#nav-logs" type="button" role="tab" aria-controls="nav-logs" aria-selected="false" onclick="carregarLogsVeiculo(@veiculoId);"><i class="fa fa-history"></i> Logs</button>
+        <button class="nav-link" id="nav-ocorrencias-tab" data-bs-toggle="tab" data-bs-target="#nav-ocorrencias" type="button" role="tab" aria-controls="nav-ocorrencias" aria-selected="false" onclick="carregarOcorrenciasVeiculo(@veiculoId);"><i class="fa fa-edit"></i> Ocorrências</button>
+        <button class="nav-link" id="nav-fotos-tab" data-bs-toggle="tab" data-bs-target="#nav-fotos" type="button" role="tab" aria-controls="nav-fotos" aria-selected="false" onclick="carregarFotosVeiculo(@veiculoId, 'PUB')"><i class="fa fa-image"></i> Fotos</button>
+    </div>
+</nav>
+<div class="tab-content pt-3" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-dados" role="tabpanel" aria-labelledby="nav-dados-tab">
+
+    </div>
+    <div class="tab-pane fade" id="nav-logs" role="tabpanel" aria-labelledby="nav-logs-tab">
+
+    </div>
+    <div class="tab-pane fade" id="nav-ocorrencias" role="tabpanel" aria-labelledby="nav-ocorrencias-tab">
+
+    </div>
+    <div class="tab-pane fade" id="nav-fotos" role="tabpanel" aria-labelledby="nav-fotos-tab">
+
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body" style="padding: 0;">
+                <img src="" style="width: 100%;" id="divModalImage" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm small" data-dismiss="modal" onclick="closeImageModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+

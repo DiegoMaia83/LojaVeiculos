@@ -1,0 +1,36 @@
+﻿@model IEnumerable<LojaVeiculos.Models.Log>
+
+@{
+    Layout = null;
+}
+
+<div class="card">
+
+    <div class="card-body small">
+
+        <table class="table table-sm small">
+
+            <tr>
+                <th>Log Id</th>
+                <th>Usuario</th>
+                <th>Ip</th>
+                <th>Data Log</th>
+                <th>Log</th>
+            </tr>
+
+            @foreach (var log in Model.OrderByDescending(x => x.LogId))
+            {
+                <tr>
+                    <td>@log.LogId.ToString("000000")</td>
+                    <td>@log.Usuario.Nome</td>
+                    <td>@log.Ip</td>
+                    <td>@log.DataLog</td>
+                    <td>@log.Descricao</td>
+                </tr>
+            }
+
+        </table>
+
+    </div>
+
+</div>

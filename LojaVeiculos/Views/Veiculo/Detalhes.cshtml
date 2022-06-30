@@ -1,0 +1,176 @@
+﻿@model LojaVeiculos.Models.Veiculo
+
+@using LojaVeiculos.Models
+
+@{
+    ViewBag.Title = "Detalhes";
+
+    IEnumerable<Cor> listaCores = ViewBag.ListaCores;
+    IEnumerable<Combustivel> listaCombustiveis = ViewBag.ListaCombustiveis;
+    IEnumerable<Condicao> listaCondicoes = ViewBag.ListaCondicoes;
+}
+
+
+<div class="row">
+
+    <div class="col-sm-12">
+
+        <div id="response-alert" style="display: none;">
+        </div>
+    </div>
+
+</div>
+
+<form action="" id="frmVeiculo">
+
+    <input type="hidden" name="VeiculoId" value="@Model.VeiculoId" />
+    <input type="hidden" name="StatusId" value="@Model.StatusId" />
+
+    <div class="row">
+
+        <div class="col-sm-2">
+            <label>Id</label>
+            <div type="text" class="form-control">@Model.VeiculoId.ToString("000000")</div>
+        </div>
+
+        <div class="col-sm-8">
+
+        </div>
+
+        <div class="col-sm-2">
+            <label>Status</label>
+            <div type="text" class="form-control">@(Model.StatusId > 0 ? Model.Status.Nome : "Ativo")</div>
+        </div>
+
+        <div class="col-sm-6">
+            <label>Marca</label>
+            <input type="text" class="form-control form-control-sm" name="Marca" value="@Model.Marca" />
+        </div>
+
+        <div class="col-sm-3">
+            <label>Placa</label>
+            <input type="text" class="form-control form-control-sm" name="Placa" value="@Model.Placa" />
+        </div>
+
+        <div class="col-sm-3">
+            <label>Chassi</label>
+            <input type="text" class="form-control form-control-sm" name="Chassi" value="@Model.Chassi" />
+        </div>
+
+        <div class="col-sm-3">
+            <label>Combustível</label>
+            <select class="form-control form-control-sm" name="CombustivelId">
+                <option value="0">-- Selecione um combustível --</option>
+                @foreach (var combustivel in listaCombustiveis)
+                {
+                    <option value="@combustivel.CombustivelId" @(combustivel.CombustivelId == Model.CombustivelId ? "selected" : "")>@combustivel.Nome</option>
+                }
+            </select>
+
+        </div>
+
+        <div class="col-sm-3">
+            <label>Cor</label>
+            <select class="form-control form-control-sm" name="CorId">
+                <option value="0">-- Selecione uma cor --</option>
+                @foreach (var cor in listaCores)
+                {
+                    <option value="@cor.CorId" @(cor.CorId == Model.CorId ? "selected" : "")>@cor.Nome</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-sm-3">
+            <label>Condição</label>
+            <select class="form-control form-control-sm" name="CondicaoId">
+                <option value="0">-- Selecione uma condição --</option>
+                @foreach (var condicao in listaCondicoes)
+                {
+                    <option value="@condicao.CondicaoId" @(condicao.CondicaoId == Model.CondicaoId ? "selected" : "")>@condicao.Nome</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-sm-3">
+            <label>Data Entrada</label>
+            <input type="date" class="form-control form-control-sm" name="DataEntrada" value="@Model.DataEntrada.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <div class="col-sm-3">
+            <label>Data Saída</label>
+            <input type="date" class="form-control form-control-sm" name="DataSaida" value="@Model.DataSaida.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <div class="col-sm-6"></div>
+
+        <div class="col-sm-6">
+            <button type="button" id="btnSalvarVeiculo" class="btn btn-dark btn-sm">Salvar</button>
+        </div>
+
+    </div>
+
+</form>
+
+<script>
+
+    $("#btnSalvarVeiculo").click(function () {
+
+        var json = $("#frmVeiculo").serialize();
+
+        $.ajax({
+            url: "/Veiculo/Detalhes",
+            method: "post",
+            dataType: "json",
+            data: json,
+            beforeSend: function () {
+                $("#btnSalvarVeiculo").attr("disabled", "disabled");
+            },
+            success: function (data) {
+                if (data.Sucesso) {
+                    callAlertSuccess("#response-alert", data.Mensagem, function () {
+                        window.location.href = "/Veiculo/Detalhes?Id=" + data.Id;
+                    });
+                } else {
+                    callAlertDanger("#response-alert", data.Mensagem, function () {
+                        $("#response-alert").hide("normal");
+                        $("#btnSalvarVeiculo").removeAttr("disabled", "disabled");
+                    });
+                }
+            },
+            error: function (data) {
+                callAlertDanger("#response-alert", "Houve um erro ao processar a rotina!", function () {
+                    $("#response-alert").hide("normal");
+                    $("#btnSalvarVeiculo").removeAttr("disabled", "disabled");
+                });
+            }
+        });
+
+    });
+
+    var salvarVeiculo = function () {
+        console.log("Teste");
+    }
+
+    var alertServer = function (tipo, mensagem) {
+        $("#response-server").removeClass().addClass("alert alert-" + tipo).html(mensagem).show("normal");
+        setTimeout(function () {
+            $("#response-server").hide("normal");
+        }, 3000);
+    }
+
+
+</script>
+
+
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-dados-tab" data-bs-toggle="tab" data-bs-target="#nav-dados" type="button" role="tab" aria-controls="nav-dados" aria-selected="true">Dados</button>
+        <button class="nav-link" id="nav-logs-tab" data-bs-toggle="tab" data-bs-target="#nav-logs" type="button" role="tab" aria-controls="nav-logs" aria-selected="false">Logs</button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-dados" role="tabpanel" aria-labelledby="nav-dados-tab">
+        Dados
+    </div>
+    <div class="tab-pane fade" id="nav-logs" role="tabpanel" aria-labelledby="nav-profile-tab">Logs</div>
+</div>

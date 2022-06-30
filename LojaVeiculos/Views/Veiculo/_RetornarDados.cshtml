@@ -1,0 +1,186 @@
+﻿@model LojaVeiculos.Models.Veiculo
+
+@using LojaVeiculos.Models
+
+@{
+    Layout = null;
+
+    IEnumerable<Cor> listaCores = ViewBag.ListaCores;
+    IEnumerable<Combustivel> listaCombustiveis = ViewBag.ListaCombustiveis;
+    IEnumerable<Condicao> listaCondicoes = ViewBag.ListaCondicoes;
+}
+
+
+<script>
+
+    $("#response-alert").hide();
+
+</script>
+
+<div class="row">
+
+    <div class="col-sm-12">
+        <div id="response-alert">
+        </div>
+    </div>
+
+</div>
+
+<form action="" id="frmVeiculo">
+
+    <input type="hidden" name="VeiculoId" value="@Model.VeiculoId" />
+    <input type="hidden" name="StatusId" value="@Model.StatusId" />
+
+    <div class="row">
+
+        <div class="col-sm-2">
+            <label>Id</label>
+            <div type="text" class="form-control form-control-sm inputBlack">@Model.VeiculoId.ToString("000000")</div>
+        </div>
+
+        <div class="col-sm-2">
+            <label>Placa</label>
+            <input type="text" class="form-control form-control-sm" id="Placa" name="Placa" value="@Model.Placa" />
+        </div>
+
+        <div class="col-sm-3">
+            <label>Marca</label>
+            <input type="text" class="form-control form-control-sm" name="Marca" value="@Model.Marca" />
+        </div>
+
+        <div class="col-sm-3">
+            <label>Chassi</label>
+            <input type="text" class="form-control form-control-sm" name="Chassi" value="@Model.Chassi" maxlength="17" />
+        </div>
+
+        <div class="col-sm-2">
+            <label>Status</label>
+            <div type="text" class="form-control form-control-sm inputBlack">@(Model.StatusId > 0 ? Model.Status.Nome : "Ativo")</div>
+        </div>
+
+        <div class="col-sm-3">
+            <label>Renavam</label>
+            <input type="text" class="form-control form-control-sm" name="Renavam" value="@Model.Renavam" maxlength="12" />
+        </div>
+
+        <div class="col-sm-3">
+            <label>Combustível</label>
+            <select class="form-control form-control-sm" name="CombustivelId">
+                <option value="0">-- Selecione um combustível --</option>
+                @foreach (var combustivel in listaCombustiveis)
+                {
+                    <option value="@combustivel.CombustivelId" @(combustivel.CombustivelId == Model.CombustivelId ? "selected" : "")>@combustivel.Nome</option>
+                }
+            </select>
+
+        </div>
+
+        <div class="col-sm-3">
+            <label>Cor</label>
+            <select class="form-control form-control-sm" name="CorId">
+                <option value="0">-- Selecione uma cor --</option>
+                @foreach (var cor in listaCores)
+                {
+                    <option value="@cor.CorId" @(cor.CorId == Model.CorId ? "selected" : "")>@cor.Nome</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-sm-3">
+            <label>Condição</label>
+            <select class="form-control form-control-sm" name="CondicaoId">
+                <option value="0">-- Selecione uma condição --</option>
+                @foreach (var condicao in listaCondicoes)
+                {
+                    <option value="@condicao.CondicaoId" @(condicao.CondicaoId == Model.CondicaoId ? "selected" : "")>@condicao.Nome</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-sm-3">
+            <label>Data Entrada</label>
+            <input type="date" class="form-control form-control-sm" id="DataEntrada" name="DataEntrada" value="@(!Model.DataEntrada.ToShortDateString().Contains("0001") ? Model.DataEntrada.ToString("yyyy-MM-dd") : "")" />
+        </div>
+
+
+
+        <div class="col-sm-3">
+            <label>Data Saída</label>
+            <input type="date" class="form-control form-control-sm" name="DataSaida" value="@(!Model.DataSaida.ToShortDateString().Contains("0001") ? Model.DataSaida.ToString("yyyy-MM-dd") : "")" />
+        </div>
+
+        <div class="col-sm-12">
+            <label>Observações</label>
+            <textarea class="form-control form-control-sm" id="Obs" name="Obs">@Model.Obs</textarea>
+        </div>
+
+    </div>
+
+    <div class="row pt-2">
+
+        <div class="col-sm-6">
+            <button type="button" id="btnSalvarVeiculo" class="btn btn-outline-secondary btn-sm">Salvar</button>
+        </div>
+
+    </div>
+
+</form>
+
+<script>
+
+    $("#btnSalvarVeiculo").click(function () {
+        
+        if ($("#Placa").val() == "") {
+            callAlertDanger("#response-alert", "Necessário informar a placa", function () {
+                $("#response-alert").hide("normal");
+                $("#Placa").focus();
+            });
+            return false;
+        }
+
+        if ($("#DataEntrada").val() == "") {
+            callAlertDanger("#response-alert", "Informe uma data de entrada válida", function () {
+                $("#response-alert").hide("normal");
+                $("#DataEntrada").focus();
+            });
+            return false;
+        }
+
+        salvarVeiculo();
+
+    });
+
+    var salvarVeiculo = function (json) {
+
+        var json = $("#frmVeiculo").serialize();
+
+        $.ajax({
+            url: "/Veiculo/SalvarVeiculo",
+            method: "post",
+            dataType: "json",
+            data: json,
+            beforeSend: function () {
+                $("#btnSalvarVeiculo").attr("disabled", "disabled");
+            },
+            success: function (data) {
+                if (data.Sucesso) {
+                    callAlertSuccess("#response-alert", data.Mensagem, function () {
+                        window.location.replace("Veiculo?Id=" + data.Id);
+                    });
+                } else {
+                    callAlertDanger("#response-alert", data.Mensagem, function () {
+                        $("#response-alert").hide("normal");
+                        $("#btnSalvarVeiculo").removeAttr("disabled", "disabled");
+                    });
+                }
+            },
+            error: function () {
+                callAlertDanger("#response-alert", "Houve um erro ao processar a rotina!", function () {
+                    $("#response-alert").hide("normal");
+                    $("#btnSalvarVeiculo").removeAttr("disabled", "disabled");
+                });
+            }
+        });
+    }
+
+</script>

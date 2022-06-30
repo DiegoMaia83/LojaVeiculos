@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+}
+
+<div class="row mb-3">
+    <div class="col-sm-3">
+        <label>Digite sua pesquisa:</label>
+        <input type="text" class="form-control form-control-sm" id="txValor" />
+    </div>
+    <div class="col-sm-2">
+        <label>Buscar por:</label>
+        <select class="form-control form-control-sm" id="txFiltro">
+            <option value=""></option>
+            <option value="codigo">Código</option>
+            <option value="placa">Placa</option>
+            <option value="chassi">Chassi</option>
+        </select>
+    </div>
+    <div class="col-sm-1">
+        <label>&nbsp;</label>
+        <button class="btn btn-outline-secondary btn-sm small w-100" id="btnListarVeiculos">Buscar</button>
+    </div>
+    <div class="col-sm-4">
+
+    </div>
+    <div class="col-sm-2">
+        <label>&nbsp;</label>
+        <button class="btn btn-dark btn-sm small w-100">Nova entrada</button>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body" id="divListarVeiculos">                
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        listarVeiculos({ valor: '', filtro: '' });
+
+        $("#btnListarVeiculos").click(function () {
+
+            var pesquisa = {
+                valor: $("#txValor").val(),
+                filtro: $("#txFiltro").val()
+            }
+
+            listarVeiculos(pesquisa);
+
+        });
+
+    });
+
+    var listarVeiculos = function (pesquisa) {
+
+        $.ajax({
+            url: "/Veiculo/ListarVeiculos?valor=" + pesquisa.valor + "&filtro=" + pesquisa.filtro,
+            method: "get",
+            beforeSend: function () {
+                $("#divListarVeiculos").html(loading("primary"));
+            },
+            success: function (data) {
+                if (data.Sucesso == false) {
+                    alert(data.Mensagem);
+                    $("#divListarVeiculos").html("");
+                    return false;
+                }
+
+                $("#divListarVeiculos").html(data);
+            }
+        });
+    }
+
+
+
+</script>
+
