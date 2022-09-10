@@ -137,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\icons\pre_loader.gif" />
     <Content Include="Content\Imagens\10\PUB000010_01.jpg" />
     <Content Include="Content\Imagens\10\PUB000010_02.jpg" />
     <Content Include="Content\Imagens\10\PUB000010_03.jpg" />
@@ -235,6 +236,7 @@
     <Content Include="Views\Veiculo\_RetornarOcorrencias.cshtml" />
     <Content Include="Views\Veiculo\_RetornarFotos.cshtml" />
     <Content Include="Views\Veiculo\_ListarFotos.cshtml" />
+    <Content Include="Views\Home\_ListarVeiculos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

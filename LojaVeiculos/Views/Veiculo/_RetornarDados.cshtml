@@ -15,6 +15,23 @@
 
     $("#response-alert").hide();
 
+    var formatarPlaca = function (valor) {
+
+        var placa = valor;
+
+        if (valor.length === 4) {
+            if (valor.substring(3, 4) == "-") {
+                valor.substring(0, 3);
+            }
+            else {
+                placa = valor.substring(0, 3) + "-" + valor.substring(3);
+            }            
+        }
+
+        $("#Placa").val(placa.toUpperCase());  
+        
+    }
+
 </script>
 
 <div class="row">
@@ -40,7 +57,7 @@
 
         <div class="col-sm-2">
             <label>Placa</label>
-            <input type="text" class="form-control form-control-sm" id="Placa" name="Placa" value="@Model.Placa" />
+            <input type="text" class="form-control form-control-sm" id="Placa" name="Placa" onkeydown="formatarPlaca($(this).val())" value="@Model.Placa" maxlength="8" />
         </div>
 
         <div class="col-sm-3">

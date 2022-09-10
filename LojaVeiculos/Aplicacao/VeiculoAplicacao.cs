@@ -9,6 +9,7 @@ namespace LojaVeiculos.Aplicacao
 {
     public class VeiculoAplicacao
     {
+
         public List<Veiculo> Listar(VeiculoPesquisa pesquisa)
         {
             try
@@ -31,6 +32,10 @@ namespace LojaVeiculos.Aplicacao
                         {
                             lista = lista.Where(x => x.Chassi.ToUpper().Contains(pesquisa.Valor.ToUpper())).ToList();
                         }
+                        else
+                        {
+                            lista = new List<Veiculo>();
+                        }
                     }
 
                     return lista;
@@ -38,6 +43,43 @@ namespace LojaVeiculos.Aplicacao
                 }
             }
             catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<Veiculo> Listar(string param)
+        {
+            try
+            {
+                using (var veiculos = new VeiculoRepositorio())
+                {
+                    if (param == "ativos")
+                    {
+                        return veiculos.GetAll()
+                            .Where(x => x.StatusId == 1).OrderByDescending(x => x.VeiculoId)
+                            .ToList();
+                    }
+
+                    if (param == "ultimas-entradas")
+                    {
+                        return veiculos.GetAll()
+                            .OrderByDescending(x => x.DataEntrada)
+                            .ToList();
+                    }
+                    
+                    if (param == "sinistros")
+                    {
+                        return veiculos.GetAll()
+                            .Where(x => x.CondicaoId == 2 || x.CondicaoId == 3 || x.CondicaoId == 4)
+                            .OrderByDescending(x => x.VeiculoId)
+                            .ToList();
+                    }
+
+                    return new List<Veiculo>();
+                }
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }

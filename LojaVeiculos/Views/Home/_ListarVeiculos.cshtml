@@ -1,0 +1,26 @@
+﻿@model IEnumerable<LojaVeiculos.Models.Veiculo>
+
+@{
+    Layout = null;
+}
+
+<table class="table table-sm small">
+
+    <tr>
+        <th>Id</th>
+        <th>Marca</th>
+        <th>Placa</th>
+        <th>Dt Entrada</th>
+    </tr>
+
+    @foreach(var veiculo in Model.Take(50))
+    {
+        <tr>
+            <td><a href="/Veiculo?Id=@veiculo.VeiculoId">@veiculo.VeiculoId.ToString("000000")</a></td>
+            <td>@veiculo.Marca</td>
+            <td>@veiculo.Placa</td>
+            <td>@veiculo.DataEntrada.ToShortDateString()</td>
+        </tr>
+    }
+
+</table>

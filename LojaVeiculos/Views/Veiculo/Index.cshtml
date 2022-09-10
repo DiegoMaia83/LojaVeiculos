@@ -76,6 +76,9 @@
             url: "/Veiculo/ListarFotos",
             method: "get",
             data: { Id: veiculoId, Tipo: tipo },
+            beforeSend: function () {
+                $("#mostraFotos").html(loading("primary"));
+            },
             success: function (data) {
                 $("#mostraFotos").html(data);
             }
@@ -93,6 +96,8 @@
 
 
 </script>
+
+
 
 <nav>
     <div class="nav nav-tabs small " id="nav-tab" role="tablist">

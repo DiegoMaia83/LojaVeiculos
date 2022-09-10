@@ -1,9 +1,7 @@
 ﻿using LojaVeiculos.Aplicacao;
 using LojaVeiculos.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -153,7 +151,8 @@ namespace LojaVeiculos.Controllers
 
         public ActionResult ListarVeiculos(VeiculoPesquisa pesquisa)
         {
-            if (!UsuarioSessao.ValidaToken()) Response.Redirect("/Login");
+            if (!UsuarioSessao.ValidaToken())
+                return Json(new ResultadoPost { Id = 0, Sucesso = false, Mensagem = "Houve um erro ao retornar os dados. Tente efetuar o login novamente." });
 
             try
             {

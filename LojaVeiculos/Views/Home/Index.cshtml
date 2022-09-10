@@ -5,4 +5,90 @@
     ViewBag.Title = "Index";
 }
 
-@ViewBag.Mensagem
+<div class="row mt-3">
+
+    <div class="col-sm-4">
+        <h3>Dashboard</h3>
+    </div>
+    <div class="col-sm-8">
+        
+    </div>
+
+</div>
+
+<hr />
+
+<div class="row">
+
+    <div class="col-sm-4">
+        <h6>Ativos</h6>
+        <div class="card" style="overflow-y: scroll; height: 400px;">
+            <div class="card-body" id="divAtivos">
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <h6>Últimas entradas</h6>
+        <div class="card" style="overflow-y: scroll; height: 400px;">
+            <div class="card-body" id="divUltimasEntradas">
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-4">
+        <h6>Sinistros</h6>
+        <div class="card" style="overflow-y: scroll; height: 400px;">
+            <div class="card-body" id="divSinistros">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    
+
+    var retornarAtivos = function () {
+
+        $.ajax({
+            url: "/Home/ListarVeiculos?param=ativos",
+            method: "get",
+            success: function (data) {
+                $("#divAtivos").html(data);
+            }
+        });
+
+    }
+
+    var retornarUltimasEntradas = function () {
+
+        $.ajax({
+            url: "/Home/ListarVeiculos?param=ultimas-entradas",
+            method: "get",
+            success: function (data) {
+                $("#divUltimasEntradas").html(data);
+            }
+        });
+
+    }
+
+    var retornarSinistros = function () {
+
+        $.ajax({
+            url: "/Home/ListarVeiculos?param=sinistros",
+            method: "get",
+            success: function (data) {
+                $("#divSinistros").html(data);
+            }
+        });
+
+    }
+
+
+    retornarAtivos();
+    retornarUltimasEntradas();
+    retornarSinistros();
+
+</script>
