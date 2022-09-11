@@ -5,46 +5,71 @@
 
 @RenderPage("../Shared/_Header.cshtml")
 
-<div class="row" style="margin-top: 200px;">
+<style>
 
-    <div class="col-sm-3 m-auto">
+    body{
+        background: url('/Content/Imagens/bg-1.jpg');
+        background-size: cover;
+    }
 
-        <div class="card">
-            <div class="card-header">
-                <i class="fas fa-user"></i> Efetuar Login
-            </div>
+</style>
 
-            <!-- Formulário de Login -->
-            <div class="card-body">
-                <form class="needs-validation" novalidate method="post" action="">
+<body style="background-color: teal;">
 
-                    @Html.AntiForgeryToken()
+    <div class="row">
 
-                    @if (ViewBag.Mensagem != null)
-                    {
-                        <div class="alert alert-warning">
-                            @ViewBag.Mensagem
-                        </div>
-                    }
-
-                    <label>Login</label>
-                    <input type="text" class="form-control" name="Login" id="Login" value="" />
-
-                    <label>Senha</label>
-                    <input type="password" class="form-control" name="Password" id="Password" value="" />
-                    </br>
-
-                    <button type="submit" class="btn btn-dark w-100" id="btnEnviar">Entrar</button>
-
-                </form>
-            </div>
-
-
+        <div class="col-sm-3 m-auto text-center" style="padding: 50px 0px 50px 0px;">
+            <h3 style="color: #107379;">SGV</h3>
+            <h5 style="color: #808080;">Sistema de gerenciamento de veículos</h5>
         </div>
+
     </div>
 
+    <div class="row">
 
-</div>
+        <div class="col-sm-3 m-auto">
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-user"></i> Efetuar Login
+                </div>
+
+                <!-- Formulário de Login -->
+                <div class="card-body">
+                    <form class="needs-validation" novalidate method="post" action="">
+
+                        @Html.AntiForgeryToken()
+
+                        @if (ViewBag.Mensagem != null)
+                        {
+                            <div class="alert alert-warning">
+                                @ViewBag.Mensagem
+                            </div>
+                        }
+
+                        <label>Login</label>
+                        <input type="text" class="form-control" name="Login" id="Login" value="" />
+
+                        <label>Senha</label>
+                        <input type="password" class="form-control" name="Password" id="Password" value="" />
+                        </br>
+
+                        <button type="submit" class="btn btn-dark w-100" id="btnEnviar">Entrar</button>
+
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+
+
+
 
 
 
